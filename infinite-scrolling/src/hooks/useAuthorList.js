@@ -21,7 +21,7 @@ export const useAuthorList = (limit, pageNumber) => {
           setHasMore(res.data.data.length > 0);
         })
         .catch((e) => setError(true));
-    }, 2000);
+    }, 1000);
   }, [limit,pageNumber]);
 
   return [loading, error, authorQuotes, hasMore];
