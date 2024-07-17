@@ -1,0 +1,1 @@
+export const API_URL = "https://api.javascripttutorial.net/v1/quotes/"

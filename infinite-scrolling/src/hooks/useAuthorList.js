@@ -1,28 +1,33 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { API_URL } from "../common/constants";
 
-export const useAuthorList = (limit, pageNumber) => {
+const useAuthorList = (authorListLimit, pageNumber) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [authorQuotes, setAuthorQuotes] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const [authorQuotes, setAuthorQuotes] = useState([]);
 
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
       axios({
         method: "GET",
-        url: "https://api.javascripttutorial.net/v1/quotes/",
-        params: { page: pageNumber, limit: limit },
+        url: API_URL,
+        params: { page: pageNumber, limit: authorListLimit },
       })
         .then((res) => {
           setAuthorQuotes(res.data.data);
-          setLoading(false);
           setHasMore(res.data.data.length > 0);
+          setLoading(false);
         })
-        .catch((e) => setError(true));
+        .catch((error) => {
+          setError(true);
+        });
     }, 1000);
-  }, [limit,pageNumber]);
+  }, [authorListLimit, pageNumber]);
 
-  return [loading, error, authorQuotes, hasMore];
+  return [loading, error, hasMore, authorQuotes];
 };
+
+export default useAuthorList;

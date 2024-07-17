@@ -1,31 +1,31 @@
 import { useCallback, useRef, useState } from "react";
-import { useAuthorList } from "./hooks/useAuthorList";
+import useAuthorList from "./hooks/useAuthorList";
 
-function App() {
+const App = () => {
   const [limit, setLimit] = useState(10);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [loading, error, authorQuotes, hasMore] = useAuthorList(
-    limit,
-    pageNumber
-  );
+  const [page] = useState(1);
+  const [loading, error, hasMore, authorQuotes] = useAuthorList(limit, page);
 
-  const observer = useRef();
+  const observer = useRef(null);
+
   const lastElementRef = useCallback(
     (element) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
+
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           setLimit((prevLimit) => prevLimit + 10);
         }
       });
+
       if (element) observer.current.observe(element);
     },
     [loading, hasMore]
   );
 
   return (
-    <div className="App">
+    <>
       {authorQuotes.map((authorQuote, index) => {
         if (authorQuotes.length === index + 1) {
           return (
@@ -43,9 +43,9 @@ function App() {
         );
       })}
       {loading && <div>Loading...</div>}
-      {error && <div>Errors...</div>}
-    </div>
+      {error && <div>Error...</div>}
+    </>
   );
-}
+};
 
 export default App;
