@@ -2,29 +2,28 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../common/constants";
 
-export const useAuthorList = (listLimit, pageNumber) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+export const useAuthorList = (limit, page) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [authorList, setAuthorList] = useState([]);
-  const [hasMore, setHasMore] = useState(false);
+  const [error, setError] = useState("");
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-
+    setIsLoading(true);
     setTimeout(() => {
       axios({
         method: "GET",
         url: API_URL,
-        params: { page: pageNumber, limit: listLimit },
+        params: { limit: limit, page: page },
       })
         .then((res) => {
           setAuthorList(res.data.data);
-          setLoading(false)
-          setHasMore(res.data.data.length===listLimit)
+          setHasMore(res.data.data.length === limit);
+          setIsLoading(false);
         })
-        .catch(() => setError(true));
-    }, 1000);
-  }, [listLimit, pageNumber]);
+        .catch((e) => setError(e));
+    }, 500);
+  }, [limit, page]);
 
-  return [loading,error,authorList,hasMore]
+  return [isLoading, authorList, error, hasMore];
 };
