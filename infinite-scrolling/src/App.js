@@ -5,18 +5,18 @@ import { AuthorQuotes } from "./components/AuthorQuotes";
 const App = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
-  const [isLoading, authorList, error, hasMore] = useAuthorList(limit, page);
+  const authorListState = useAuthorList(limit, page);
 
   const observer = useRef(null);
   const infiniteReference = useCallback(
     (element) => {
-      if (isLoading) return;
+      if (authorListState?.isLoading) return;
       if (observer.current) {
         observer.current.disconnect();
       }
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && authorListState?.hasMore) {
           setLimit((prev) => prev + 10);
         }
       });
@@ -25,14 +25,14 @@ const App = () => {
         observer.current.observe(element);
       }
     },
-    [isLoading, hasMore]
+    [authorListState?.isLoading, authorListState?.hasMore]
   );
-
+  
   return (
     <div className="author-quotes-list">
-      {authorList.length > 0 &&
-        authorList.map((authorQuotes, index) => {
-          if (index + 1 === authorList.length) {
+      {authorListState?.authorList?.length > 0 &&
+        authorListState?.authorList.map((authorQuotes, index) => {
+          if (index + 1 === authorListState?.authorList.length) {
             return (
               <AuthorQuotes
                 authorQuotes={authorQuotes}
@@ -43,7 +43,7 @@ const App = () => {
           }
           return <AuthorQuotes authorQuotes={authorQuotes} />;
         })}
-      {isLoading && <>Loading...</>}
+      {authorListState?.isLoading && <>Loading...</>}
     </div>
   );
 };

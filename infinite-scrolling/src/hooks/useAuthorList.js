@@ -1,15 +1,21 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { API_URL } from "../common/constants";
+import { authorReducer } from "./authorReducer";
+import { actionTypes } from "./actionTypes";
+
+const INITIAL_STATE = {
+  isLoading: false,
+  authorList: [],
+  error: "",
+  hasMore: true,
+};
 
 export const useAuthorList = (limit, page) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [authorList, setAuthorList] = useState([]);
-  const [error, setError] = useState("");
-  const [hasMore, setHasMore] = useState(true);
+  const [authorListState, dispatch] = useReducer(authorReducer,INITIAL_STATE);
 
   useEffect(() => {
-    setIsLoading(true);
+    dispatch({ type: actionTypes.LOADING });
     setTimeout(() => {
       axios({
         method: "GET",
@@ -17,13 +23,17 @@ export const useAuthorList = (limit, page) => {
         params: { limit: limit, page: page },
       })
         .then((res) => {
-          setAuthorList(res.data.data);
-          setHasMore(res.data.data.length === limit);
-          setIsLoading(false);
+          dispatch({
+            type: actionTypes.SUCCESS,
+            payload: {
+              authors: res?.data?.data,
+              hasMore: res?.data?.data?.length === limit,
+            },
+          });
         })
-        .catch((e) => setError(e));
+        .catch((e) => dispatch(actionTypes.ERROR));
     }, 500);
   }, [limit, page]);
 
-  return [isLoading, authorList, error, hasMore];
+  return authorListState;
 };
