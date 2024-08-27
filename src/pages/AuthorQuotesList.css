@@ -1,0 +1,7 @@
+.author-quotes-list {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 5rem;
+    max-width: 30rem;
+    margin: 0 auto;
+}

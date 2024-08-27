@@ -1,6 +1,11 @@
 import React, { useCallback, useRef, useState } from "react";
+
 import { useAuthorList } from "../hooks/useAuthorList";
 import { AuthorQuotes } from "../components/AuthorQuotes";
+
+import "./AuthorQuotesList.css"
+import { ScaleLoader } from "react-spinners";
+import { LOADER_CSS } from "../common/constants";
 
 export const AuthorQuotesList = () => {
   const [limit, setLimit] = useState(10);
@@ -42,7 +47,7 @@ export const AuthorQuotesList = () => {
           }
           return <AuthorQuotes authorQuotes={authorQuotes} />;
         })}
-      {authorListState?.isLoading && <>Loading...</>}
+      {authorListState?.isLoading && <ScaleLoader color="#C8D0FF" cssOverride={LOADER_CSS}/>}
     </div>
   );
 };

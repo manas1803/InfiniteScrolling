@@ -1,0 +1,17 @@
+.author-quote {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.author-quote >div {
+    font-weight: bold;
+    color: #C8D0FF;
+}
+
+.author-quote >p {
+    display: flex;
+    flex-direction: row-reverse;
+    font-style: italic;
+    color: #C8D0FF;
+}

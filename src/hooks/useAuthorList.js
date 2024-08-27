@@ -32,7 +32,7 @@ export const useAuthorList = (limit, page) => {
           });
         })
         .catch((e) => dispatch(actionTypes.ERROR));
-    }, 500);
+    }, 1000);
   }, [limit, page]);
 
   return authorListState;
