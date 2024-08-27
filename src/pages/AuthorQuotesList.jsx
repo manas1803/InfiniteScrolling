@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from "react";
-import { useAuthorList } from "./hooks/useAuthorList";
-import { AuthorQuotes } from "./components/AuthorQuotes";
+import { useAuthorList } from "../hooks/useAuthorList";
+import { AuthorQuotes } from "../components/AuthorQuotes";
 
-const App = () => {
+export const AuthorQuotesList = () => {
   const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
   const authorListState = useAuthorList(limit, page);
 
   const observer = useRef(null);
@@ -27,7 +27,6 @@ const App = () => {
     },
     [authorListState?.isLoading, authorListState?.hasMore]
   );
-  
   return (
     <div className="author-quotes-list">
       {authorListState?.authorList?.length > 0 &&
@@ -47,5 +46,3 @@ const App = () => {
     </div>
   );
 };
-
-export default App;
